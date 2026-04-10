@@ -6,7 +6,6 @@
 <title>差勤小幫手 — 公務人員差勤法規諮詢</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --primary: #4f46e5;
   --primary-light: #e0e7ff;
@@ -19,49 +18,46 @@
   --danger: #ef4444;
   --radius: 12px;
 }
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
   background: var(--bg);
   color: var(--text);
   height: 100dvh;
   display: flex;
   flex-direction: column;
 }
-
-/* ── API Key Bar ── */
-.api-bar {
+.app-header {
   background: #fff;
   border-bottom: 1px solid var(--border);
-  padding: 10px 16px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
 }
-.api-bar label {
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
+.app-header .icon {
+  width: 36px; height: 36px;
+  background: var(--primary-light);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
 }
-.api-bar input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color .2s;
+.app-header .title { font-size: 16px; font-weight: 700; color: var(--text); }
+.app-header .sub { font-size: 12px; color: var(--text-light); margin-top: 1px; }
+.app-header .dot {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: #16a34a;
 }
-.api-bar input:focus { border-color: var(--primary); }
-.api-bar .status {
-  font-size: 12px;
-  white-space: nowrap;
+.app-header .dot::before {
+  content: '';
+  width: 7px; height: 7px;
+  background: #16a34a;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
 }
-.api-bar .status.saved { color: #16a34a; }
-.api-bar .status.empty { color: var(--danger); }
-
-/* ── Chat Container ── */
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 .chat-container {
   flex: 1;
   overflow-y: auto;
@@ -71,16 +67,12 @@ body {
   gap: 12px;
   scroll-behavior: smooth;
 }
-
-/* ── Welcome ── */
 .welcome {
   text-align: center;
   padding: 32px 16px 8px;
 }
 .welcome h1 { font-size: 22px; margin-bottom: 4px; }
 .welcome p { color: var(--text-light); font-size: 14px; }
-
-/* ── Quick Buttons ── */
 .quick-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -102,22 +94,17 @@ body {
   background: var(--primary-light);
   border-color: var(--primary);
 }
-
-/* ── Bubbles ── */
 .message { display: flex; gap: 8px; max-width: 80%; animation: fadeIn .25s ease; }
 .message.user { align-self: flex-end; flex-direction: row-reverse; }
 .message.bot  { align-self: flex-start; }
-
 .avatar {
   width: 36px; height: 36px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
+  font-size: 18px; flex-shrink: 0;
 }
 .message.bot .avatar  { background: var(--primary-light); }
 .message.user .avatar { background: var(--user-bubble); color: #fff; }
-
 .bubble {
   padding: 10px 14px;
   border-radius: var(--radius);
@@ -135,8 +122,6 @@ body {
   background: var(--bot-bubble);
   border-bottom-left-radius: 4px;
 }
-
-/* ── Loading dots ── */
 .loading-dots { display: inline-flex; gap: 4px; padding: 4px 0; }
 .loading-dots span {
   width: 8px; height: 8px;
@@ -146,23 +131,13 @@ body {
 }
 .loading-dots span:nth-child(2) { animation-delay: .2s; }
 .loading-dots span:nth-child(3) { animation-delay: .4s; }
-
-@keyframes bounce {
-  to { opacity: .3; transform: translateY(-4px); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Error bubble ── */
+@keyframes bounce { to { opacity: .3; transform: translateY(-4px); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .bubble.error {
   background: #fef2f2;
   color: var(--danger);
   border: 1px solid #fecaca;
 }
-
-/* ── Input Bar ── */
 .input-bar {
   background: #fff;
   border-top: 1px solid var(--border);
@@ -198,8 +173,13 @@ body {
   white-space: nowrap;
 }
 .input-bar button:disabled { opacity: .5; cursor: not-allowed; }
-
-/* ── Responsive ── */
+.disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-light);
+  padding: 6px 16px 10px;
+  background: #fff;
+}
 @media (max-width: 600px) {
   .message { max-width: 92%; }
   .welcome h1 { font-size: 18px; }
@@ -209,14 +189,15 @@ body {
 </head>
 <body>
 
-<!-- API Key Bar -->
-<div class="api-bar">
-  <label for="apiKeyInput">🔑 API Key</label>
-  <input id="apiKeyInput" type="password" placeholder="輸入您的 Google AI Studio API Key" autocomplete="off">
-  <span id="apiKeyStatus" class="status empty">未設定</span>
+<div class="app-header">
+  <div class="icon">📋</div>
+  <div>
+    <div class="title">差勤小幫手</div>
+    <div class="sub">公務人員差勤法規諮詢 · 113年版</div>
+  </div>
+  <div class="dot">線上</div>
 </div>
 
-<!-- Chat Area -->
 <div class="chat-container" id="chatContainer">
   <div class="welcome" id="welcome">
     <h1>👋 嗨，我是差勤小幫手</h1>
@@ -232,107 +213,59 @@ body {
   </div>
 </div>
 
-<!-- Input Bar -->
 <div class="input-bar">
   <textarea id="userInput" rows="1" placeholder="輸入差勤相關問題…"></textarea>
-  <button id="sendBtn" disabled>送出</button>
+  <button id="sendBtn">送出</button>
 </div>
+<div class="disclaimer">⚠️ 回答僅供參考，正式請假請依各機關差勤系統與人事規定為準</div>
 
 <script>
+const WORKER_URL = 'https://leave-chatbot-proxy.founderai813.workers.dev';
+
 const SYSTEM_PROMPT = `你是一位專業的台灣公務人員差勤法規專家助理，名叫「差勤小幫手」。請根據現行法規清楚、親切地回答差勤相關問題。
 
 假別規定：
 - 婚假：14 天，須於結婚之日起 3 個月內請畢
-- 事假：每年 5 天（超過以曠職論）
-- 家庭照顧假：每年 7 天，併入事假計算
-- 病假：每年 28 天（超過者以事假抵，事假超過再延長病假）
-- 生理假：每月 1 天，全年請求日數未逾 3 天不併入病假計算，逾 3 天部分併入病假
-- 喪假：父母、配偶死亡 15 天；祖父母、子女、配偶之父母死亡 10 天；曾祖父母、兄弟姊妹、配偶之祖父母死亡 5 天；其他繼父母、配偶之繼父母 5 天
-- 公傷假：因執行職務受傷或生病所需療期間，檢附醫師證明
-- 公假：依法令規定給予之假
-- 產假：分娩前後 42 天；妊娠滿 20 週以上流產者 42 天；妊娠 12 週以上未滿 20 週流產者 21 天；妊娠未滿 12 週流產者 14 天
-- 陪產假：配偶分娩，給予 7 天，得於配偶分娩日前後合計 15 日內請畢
-- 陪產檢假：每次陪同配偶產檢，給予 7 天
-- 骨髓或器官捐贈假：視實際需要天數給予
-- 年資休假（特休）：
-  - 服務滿 1 年：7 天
-  - 滿 3 年：14 天
-  - 滿 6 年：21 天
-  - 滿 9 年：28 天
-  - 滿 14 年以上：30 天
-- 身心調適假（又稱彈性放假）：依行政院人事行政總處公告，為調整放假日而上班之補班日，公務人員得申請免補班（身心調適假不列入考績考量）
-- 加班補休：加班時數得申請補休，補休期限為加班日所屬年度之最後一日，届期未休畢者依規定核發加班費
+- 事假：每年 7 天（含身心調適假合計）
+- 病假：每年 28 天
+- 生理假：每月 1 天，全年以 3 天為限，不併入病假
+- 喪假：父母/配偶/子女 15 天；祖父母/外祖父母/配偶父母 7 天；兄弟姊妹 5 天
+- 產假：56 天（妊娠 20 週以上）
+- 陪產檢及陪產假：7 天
+- 育嬰留職停薪：子女 3 歲前，每次至少 6 個月
+- 公傷病假：不計入病假
+- 身心調適假：113 年新增，每年 3 天，不需證明，併入事假
+- 家庭照顧假：每年 7 天，併入事假
 
-回答原則：
-1. 引用具體法規與天數
-2. 語氣親切、條理分明
-3. 若問題超出差勤範圍，禮貌告知並建議尋求其他管道
-4. 若法規有模糊地帶，提醒使用者以機關人事單位解釋為準`;
+休假天數：滿1年7天、滿3年14天、滿6年21天、滿9年28天、滿14年30天，可保留至次年6月底。
 
-const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=';
+加班補償：補休期限 2 年，逾期視同放棄或折算加班費。
 
-// DOM Elements
-const apiKeyInput   = document.getElementById('apiKeyInput');
-const apiKeyStatus  = document.getElementById('apiKeyStatus');
+回答時請條列清楚，並建議洽詢人事單位確認。若問題與差勤無關請婉轉說明。`;
+
+let conversationHistory = [];
+let isLoading = false;
+
 const chatContainer = document.getElementById('chatContainer');
 const quickButtons  = document.getElementById('quickButtons');
 const userInput     = document.getElementById('userInput');
 const sendBtn       = document.getElementById('sendBtn');
 const welcome       = document.getElementById('welcome');
 
-// State
-let conversationHistory = []; // { role: 'user'|'model', parts: [{ text }] }
-let isLoading = false;
-
-// ── API Key persistence ──
-function loadApiKey() {
-  const saved = localStorage.getItem('gemini_api_key');
-  if (saved) {
-    apiKeyInput.value = saved;
-    updateKeyStatus(true);
-  }
-}
-
-function updateKeyStatus(hasSaved) {
-  if (hasSaved) {
-    apiKeyStatus.textContent = '✓ 已儲存';
-    apiKeyStatus.className = 'status saved';
-  } else {
-    apiKeyStatus.textContent = '未設定';
-    apiKeyStatus.className = 'status empty';
-  }
-}
-
-apiKeyInput.addEventListener('input', () => {
-  const key = apiKeyInput.value.trim();
-  if (key) {
-    localStorage.setItem('gemini_api_key', key);
-    updateKeyStatus(true);
-  } else {
-    localStorage.removeItem('gemini_api_key');
-    updateKeyStatus(false);
-  }
-  sendBtn.disabled = !key || !userInput.value.trim();
-});
-
-// ── Auto-resize textarea ──
 userInput.addEventListener('input', () => {
   userInput.style.height = 'auto';
   userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
-  sendBtn.disabled = !userInput.value.trim() || !apiKeyInput.value.trim();
 });
 
-// ── Enter to send ──
 userInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    if (!sendBtn.disabled) sendMessage();
+    if (!isLoading && userInput.value.trim()) sendMessage();
   }
 });
 
 sendBtn.addEventListener('click', sendMessage);
 
-// ── Quick buttons ──
 quickButtons.addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-q]');
   if (!btn) return;
@@ -341,48 +274,37 @@ quickButtons.addEventListener('click', (e) => {
   sendMessage();
 });
 
-// ── Create message bubble ──
 function appendMessage(role, content, isError) {
-  // Hide welcome & quick buttons on first message
   if (welcome) welcome.style.display = 'none';
   if (role === 'user' && quickButtons) quickButtons.style.display = 'none';
-
   const wrapper = document.createElement('div');
   wrapper.className = `message ${role}`;
-
   const avatar = document.createElement('div');
   avatar.className = 'avatar';
   avatar.textContent = role === 'bot' ? '🤖' : '👤';
-
   const bubble = document.createElement('div');
   bubble.className = 'bubble' + (isError ? ' error' : '');
   bubble.textContent = content;
-
   wrapper.appendChild(avatar);
   wrapper.appendChild(bubble);
   chatContainer.appendChild(wrapper);
-  scrollToBottom();
-  return bubble;
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// ── Loading indicator ──
 function showLoading() {
   const wrapper = document.createElement('div');
   wrapper.className = 'message bot';
   wrapper.id = 'loadingMsg';
-
   const avatar = document.createElement('div');
   avatar.className = 'avatar';
   avatar.textContent = '🤖';
-
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
   bubble.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-
   wrapper.appendChild(avatar);
   wrapper.appendChild(bubble);
   chatContainer.appendChild(wrapper);
-  scrollToBottom();
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 function hideLoading() {
@@ -390,95 +312,55 @@ function hideLoading() {
   if (el) el.remove();
 }
 
-function scrollToBottom() {
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-// ── Send message ──
 async function sendMessage() {
   const text = userInput.value.trim();
-  const apiKey = apiKeyInput.value.trim();
-  if (!text || !apiKey || isLoading) return;
-
+  if (!text || isLoading) return;
   isLoading = true;
   sendBtn.disabled = true;
   userInput.value = '';
   userInput.style.height = 'auto';
-
   appendMessage('user', text);
-
-  // Add to conversation history
   conversationHistory.push({ role: 'user', parts: [{ text }] });
-
   showLoading();
-
   try {
-    const response = await fetch(API_BASE + apiKey, {
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: conversationHistory,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2048,
-        }
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
       })
     });
-
     hideLoading();
-
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
-      const status = response.status;
-
-      if (status === 400 && JSON.stringify(errData).includes('API_KEY_INVALID')) {
-        throw { type: 'invalid_key' };
-      } else if (status === 429) {
-        throw { type: 'rate_limit' };
-      } else {
-        throw { type: 'api_error', status, detail: errData?.error?.message || '' };
-      }
+      if (response.status === 429) throw { type: 'rate_limit' };
+      if (response.status === 500) throw { type: 'server_error' };
+      throw { type: 'api_error', status: response.status };
     }
-
     const data = await response.json();
     const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
     if (!reply) throw { type: 'empty_response' };
-
     conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
     appendMessage('bot', reply);
-
   } catch (err) {
     hideLoading();
     let errMsg;
-
-    if (err.type === 'invalid_key') {
-      errMsg = '⚠️ API Key 無效，請確認您的 Google AI Studio API Key 是否正確。';
-    } else if (err.type === 'rate_limit') {
-      errMsg = '⚠️ 請求過於頻繁（429），請稍後再試。Gemini API 有每分鐘請求次數限制。';
-    } else if (err.type === 'empty_response') {
-      errMsg = '⚠️ API 回傳了空白回應，請重新嘗試。';
-    } else if (err.type === 'api_error') {
-      errMsg = `⚠️ API 錯誤（${err.status}）：${err.detail || '請稍後再試。'}`;
-    } else if (err instanceof TypeError && err.message === 'Failed to fetch') {
-      errMsg = '⚠️ 網路連線失敗，請檢查您的網路狀態後重試。';
-    } else {
-      errMsg = '⚠️ 發生未知錯誤，請稍後再試。';
-    }
-
-    // Remove the last user message from history since it failed
+    if (err.type === 'rate_limit') errMsg = '⚠️ 請求過於頻繁，請稍後再試。';
+    else if (err.type === 'server_error') errMsg = '⚠️ 伺服器設定錯誤，請聯絡管理員。';
+    else if (err.type === 'empty_response') errMsg = '⚠️ 收到空白回應，請重新嘗試。';
+    else if (err instanceof TypeError) errMsg = '⚠️ 網路連線失敗，請檢查網路狀態。';
+    else errMsg = '⚠️ 發生未知錯誤，請稍後再試。';
     conversationHistory.pop();
     appendMessage('bot', errMsg, true);
   } finally {
     isLoading = false;
-    sendBtn.disabled = !userInput.value.trim() || !apiKeyInput.value.trim();
+    sendBtn.disabled = false;
     userInput.focus();
   }
 }
 
-// ── Init ──
-loadApiKey();
 userInput.focus();
 </script>
 </body>
