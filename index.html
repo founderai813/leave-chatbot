@@ -276,7 +276,6 @@ quickButtons.addEventListener('click', (e) => {
 
 function appendMessage(role, content, isError) {
   if (welcome) welcome.style.display = 'none';
-  if (role === 'user' && quickButtons) quickButtons.style.display = 'none';
   const wrapper = document.createElement('div');
   wrapper.className = `message ${role}`;
   const avatar = document.createElement('div');
